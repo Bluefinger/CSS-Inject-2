@@ -8,16 +8,20 @@ const addInline = function (elem, property, value) {
 }
 
 const addObjectInline = function (elems, object) {
-    for (let property in object) {
-        if (object.hasOwnProperty(property)) {
-            if (elems.length) {
-                for (let i = 0; i < elems.length; i++) {
-                    this.addInline(elems[i], property, object[property]);
+    if (typeof object === "object") {
+        for (let property in object) {
+            if (object.hasOwnProperty(property)) {
+                if (elems.length) {
+                    for (let i = 0; i < elems.length; i++) {
+                        this.addInline(elems[i], property, object[property]);
+                    }
+                } else {
+                    this.addInline(elems, property, object[property]);
                 }
-            } else {
-                this.addInline(elems, property, object[property]);
             }
         }
+    } else {
+        throw new TypeError("Parameter is not an object");
     }
     return this;
 }
@@ -43,7 +47,12 @@ const removeArrayInline = function(elems, array) {
 };
 
 const removeObjectInline = function(elems, object) {
-    return this.removeArrayInline(elems, Object.keys(object));
+    if (typeof object === "object") {
+        this.removeArrayInline(elems, Object.keys(object));
+    } else {
+        throw new TypeError("Parameter is not an object");
+    }
+    return this;
 };
 
 export default Mixin(superclass => {

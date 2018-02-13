@@ -21,7 +21,6 @@ const objectAdd = function(object) {
             if (object.hasOwnProperty(selector)) {
                 let str = "";
                 const index = this.styles.indexOf(selector);
-
                 for (let property in object[selector]) {
                     if (object[selector].hasOwnProperty(property)) {
                         let value = object[selector][property];
@@ -56,18 +55,22 @@ const remove = function (selector, property) {
 };
 
 const objectRemove = function(object) {
-    for (let selector in object) {
-        if (object.hasOwnProperty(selector)) {
-            const properties = Object.keys(object[selector]);
-            const l = properties.length;
-            if (l > 0) {
-                for (let i=0;i<l;i+=1) {
-                    this.remove(selector, properties[i]);
+    if (typeof object === "object") {
+        for (let selector in object) {
+            if (object.hasOwnProperty(selector)) {
+                const properties = Object.keys(object[selector]);
+                const l = properties.length;
+                if (l > 0) {
+                    for (let i=0;i<l;i+=1) {
+                        this.remove(selector, properties[i]);
+                    }
+                } else {
+                    this.remove(selector);
                 }
-            } else {
-                this.remove(selector);
             }
         }
+    } else {
+        throw new TypeError("Parameter is not an object");
     }
     return this;
 }
