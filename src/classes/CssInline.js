@@ -4,12 +4,10 @@ import { Mixin } from "mixwith";
 
 const addInline = function (elem, property, value) {
     elem.style.setProperty(property, value);
-
     return this;
 }
 
 const addObjectInline = function (elems, object) {
-
     for (let property in object) {
         if (object.hasOwnProperty(property)) {
             if (elems.length) {
@@ -21,23 +19,18 @@ const addObjectInline = function (elems, object) {
             }
         }
     }
-
     return this;
 }
 
 const removeInline = function(elem, property) {
     elem.style.removeProperty(property);
-
     return this;
 };
 
 const removeArrayInline = function(elems, array) {
-
     let property = null;
-
     for (let i = 0, len = array.length; i < len; i++) {
         property = array[i];
-
         if (elems.length) {
             for (let i = 0; i < elems.length; i++) {
                 this.removeInline(elems[i], property);
@@ -46,7 +39,6 @@ const removeArrayInline = function(elems, array) {
             this.removeInline(elems, property);
         }
     }
-
     return this;
 };
 

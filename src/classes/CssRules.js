@@ -17,7 +17,6 @@ const add = function (selector, property, value) {
 
 const objectAdd = function(object) {
     if (typeof object === "object") {
-
         for (let selector in object) {
             if (object.hasOwnProperty(selector)) {
                 let str = "";
@@ -33,11 +32,9 @@ const objectAdd = function(object) {
                         }
                     }
                 }
-
-                if (index === -1) { this.add(selector,str); }
+                if (index === -1) this.add(selector,str);
             }
         }
-
     } else {
         throw new TypeError("Parameter is not an object");
     }
