@@ -2,14 +2,14 @@
 "use strict";
 
 import assert from "assert";
-import cssinject from "../src/CssInject";
+import cssInject from "../src/CssInject";
 
 const STYLES = { modifier: "StylesOnly" };
 const INLINE = { modifier: "InlineOnly" };
 
 describe("CssInject", function() {
     describe("init()", function() {
-        const test = cssinject();
+        const test = cssInject();
 
         it("should put a style element in the document head", function() {
             const el = document.getElementById(test.id);
@@ -37,7 +37,7 @@ describe("CssInject", function() {
         let test;
 
         beforeEach(function () {
-            test = cssinject();
+            test = cssInject();
         });
 
         it("should remove the stylesheet from the document head", function() {
@@ -56,7 +56,7 @@ describe("CssInject", function() {
 });
 
 describe("CssRules", function() {
-    const styles = cssinject(STYLES);
+    const styles = cssInject(STYLES);
 
     describe("add()", function() {
         it("should add a new rule with a given selector, CSS property and value", function() {
@@ -199,8 +199,8 @@ describe("CssRules", function() {
 });
 
 describe("CssInline", function() {
-    const inline = cssinject(INLINE);
-    const full = cssinject();
+    const inline = cssInject(INLINE);
+    const full = cssInject();
     const div = document.createElement("div");
 
     it("InlineOnly mode should not put a stylesheet in the document head", function() {

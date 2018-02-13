@@ -10,7 +10,7 @@ const InlineOnly = mix(CssBase).with(CssInline);
 const StylesOnly = mix(CssBase).with(CssRules);
 const Full = mix(CssBase).with(CssRules, CssInline);
 
-export default function CssInject(opts = {}) {
+export default function cssInject(opts = {}) {
     const { id, media, modifier } = opts;
 
     switch (modifier) {
