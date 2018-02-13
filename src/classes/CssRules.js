@@ -1,29 +1,16 @@
 "use strict";
 import { Mixin } from "mixwith";
 
-const addCss = function (index, selector, property, value) {
-    let str = (!value) ? property : property + ":" + value + ";";
-    this.obj.insertRule(`${selector}{${str}}`, index);
-};
-
-const removeCss = function (index, property) {
-    if (property) this.rules[index].style.removeProperty(property);
-    else this.obj.deleteRule(index);
-};
-
-const modifyCss = function(index, property, value) {
-    this.rules[index].style.setProperty(property,value);
-};
-
 const add = function (selector, property, value) {
     const index = this.styles.indexOf(selector);
 
     if (index > -1) {
-        this.modifyCss(index, property, value);
+        this.rules[index].style.setProperty(property,value);
     } else {
         const i = this.styles.length;
         this.styles.push(selector);
-        this.addCss(i, selector, property, value);
+        const str = (!value) ? property : property + ":" + value + ";";
+        this.obj.insertRule(`${selector}{${str}}`, i);
     }
 
     return this;
@@ -31,8 +18,6 @@ const add = function (selector, property, value) {
 
 const objectAdd = function(object) {
     if (typeof object === "object") {
-
-        let selectors = Object.keys(object);
 
         for (let selector in object) {
             if (object.hasOwnProperty(selector)) {
@@ -64,10 +49,10 @@ const remove = function (selector, property) {
 
     if (index > -1) {
         if (property) {
-            this.removeCss(index, property);
+            this.rules[index].style.removeProperty(property)
         } else {
             this.styles.splice(index, 1);
-            this.removeCss(index);
+            this.obj.deleteRule(index)
         }
     }
 
@@ -103,10 +88,6 @@ const arrayRemove = function(array) {
 export default Mixin(superclass => class CssRules extends superclass {
     constructor() {
         super(...arguments);
-        this.addCss = addCss;
-        this.removeCss = removeCss;
-        this.modifyCss = modifyCss;
-
         this.add = add;
         this.remove = remove;
         this.objectAdd = objectAdd;
