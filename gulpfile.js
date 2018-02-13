@@ -23,11 +23,21 @@ const b = watchify(browserify(opts));
 const testOpts = { reporter: "dot" };
 
 const babelOpts = {
+    global: true,
+    only: /^(?:.*\/node_modules\/(?:mixwith)\/|(?!.*\/node_modules\/)).*$/,
     plugins: ["transform-es2015-modules-commonjs"],
     presets: ["env"]
 };
 
 const m = mochify(testOpts);
+
+/*
+ * add transformations here
+ * i.e. b.transform(coffeeify);
+ */
+
+b.transform(babelify, babelOpts);
+m.transform(babelify, babelOpts);
 
 const bundle = function() {
     return b.bundle()
@@ -48,14 +58,6 @@ const bundle = function() {
 const test = function () {
     return m.bundle();
 }
-
-m.transform(babelify, babelOpts)
-
-/*
- * add transformations here
- * i.e. b.transform(coffeeify);
- */
-b.transform(babelify, babelOpts);
 
 // on any dep update, runs the bundler
 b.on('update', bundle);

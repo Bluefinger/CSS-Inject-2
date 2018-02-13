@@ -6,12 +6,12 @@ import CssBase from "./classes/CssBase";
 import CssRules from "./classes/CssRules";
 import CssInline from "./classes/CssInline";
 
-let InlineOnly = mix(CssBase).with(CssInline);
-let StylesOnly = mix(CssBase).with(CssRules);
-let Full = mix(CssBase).with(CssRules, CssInline);
+const InlineOnly = mix(CssBase).with(CssInline);
+const StylesOnly = mix(CssBase).with(CssRules);
+const Full = mix(CssBase).with(CssRules, CssInline);
 
 export default function CssInject(opts = {}) {
-    let { id, media, modifier } = opts;
+    const { id, media, modifier } = opts;
 
     switch (modifier) {
         case "StylesOnly":

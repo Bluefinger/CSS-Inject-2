@@ -2,9 +2,10 @@
   "name": "css-inject-2",
   "version": "0.0.1",
   "description": "Modernised refactor of CSS-Inject",
-  "main": "index.js",
+  "main": "./src/CssInject.js",
   "scripts": {
-    "test": "gulp test"
+    "test": "gulp test",
+    "build": "gulp build"
   },
   "author": "",
   "license": "MIT",
