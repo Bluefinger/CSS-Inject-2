@@ -43,8 +43,8 @@ export default class CssBase {
         this.el = null;
         this.obj = null;
         this.styles = null;
-
-        this.init = init;
-        this.destroy = destroy;
     }
 }
+
+CssBase.prototype.init = init;
+CssBase.prototype.destroy = destroy;

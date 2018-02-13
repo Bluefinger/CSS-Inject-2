@@ -200,6 +200,7 @@ describe("CssRules", function() {
 
 describe("CssInline", function() {
     const inline = cssinject(INLINE);
+    const full = cssinject();
     const div = document.createElement("div");
 
     it("InlineOnly mode should not put a stylesheet in the document head", function() {
@@ -209,25 +210,25 @@ describe("CssInline", function() {
 
     describe("addInline()", function() {
         it("should add new style properties to an element", function() {
-            inline.addInline(div, "border", "5px solid #ff0000");
+            full.addInline(div, "border", "5px solid #ff0000");
 
             assert.equal(div.style.border, "5px solid rgb(255, 0, 0)");
         });
 
         it("should modify existing style properties to an element", function() {
-            inline.addInline(div, "border", "5px solid #ffff00");
+            full.addInline(div, "border", "5px solid #ffff00");
 
             assert.equal(div.style.cssText, "border: 5px solid rgb(255, 255, 0);");
         });
 
         after(function() {
-            inline.removeInline(div, "border");
+            full.removeInline(div, "border");
         });
     });
 
     describe("addObjectInline()", function() {
         it("should add new style properties to an element via an object", function() {
-            inline.addObjectInline(div, {
+            full.addObjectInline(div, {
                 "background-color": "#ff0000",
                 "border": "5px solid #ff0000"
             });
@@ -236,7 +237,7 @@ describe("CssInline", function() {
         });
 
         it("should modify existing style properties to an element via an object", function() {
-            inline.addObjectInline(div, {
+            full.addObjectInline(div, {
                 "background-color": "#0000ff",
                 "border": "5px solid #00ff00"
             });
@@ -245,7 +246,7 @@ describe("CssInline", function() {
         });
 
         after(function() {
-            inline.removeArrayInline(div, [
+            full.removeArrayInline(div, [
                 "background-color",
                 "border"
             ]);
@@ -254,24 +255,24 @@ describe("CssInline", function() {
 
     describe("removeInline()", function() {
         before(function() {
-            inline.addInline(div, "border", "5px solid #ff0000")
+            full.addInline(div, "border", "5px solid #ff0000")
                 .addInline(div, "background-color", "#ff0000");
         });
 
         it("should remove style properties from the element", function() {
-            inline.removeInline(div, "background-color");
+            full.removeInline(div, "background-color");
 
             assert.equal(div.style.cssText, "border: 5px solid rgb(255, 0, 0);");
         });
 
         after(function() {
-            inline.removeInline(div, "border");
+            full.removeInline(div, "border");
         });
     });
 
     describe("removeArrayInline()", function() {
         beforeEach(function() {
-            inline.addObjectInline(div, {
+            full.addObjectInline(div, {
                 "background-color": "#0000ff",
                 "border": "5px solid #00ff00",
                 "font-size": "14px"
@@ -279,13 +280,13 @@ describe("CssInline", function() {
         });
 
         it("should remove one style property without affecting others from the element", function() {
-            inline.removeArrayInline(div, ["background-color"]);
+            full.removeArrayInline(div, ["background-color"]);
 
             assert.equal(div.style.cssText, 'border: 5px solid rgb(0, 255, 0); font-size: 14px;');
         });
 
         it("should remove all style properties from the element", function() {
-            inline.removeArrayInline(div, [
+            full.removeArrayInline(div, [
                 "background-color",
                 "border",
                 "font-size"
@@ -297,7 +298,7 @@ describe("CssInline", function() {
 
     describe("removeObjectInline()", function() {
         beforeEach(function() {
-            inline.addObjectInline(div, {
+            full.addObjectInline(div, {
                 "background-color": "#0000ff",
                 "border": "5px solid #00ff00",
                 "font-size": "14px"
@@ -305,13 +306,13 @@ describe("CssInline", function() {
         });
 
         it("should remove one property without affecting other from the element via an object", function() {
-            inline.removeObjectInline(div, { "background-color": true });
+            full.removeObjectInline(div, { "background-color": true });
 
             assert.equal(div.style.cssText, 'border: 5px solid rgb(0, 255, 0); font-size: 14px;');
         });
 
         it("should remove all properties from the element via an object", function() {
-            inline.removeObjectInline(div, {
+            full.removeObjectInline(div, {
                 "background-color": true,
                 "border": true,
                 "font-size": true
@@ -322,6 +323,7 @@ describe("CssInline", function() {
     });
 
     after(function() {
+        full.destroy();
         inline.destroy();
     });
 });

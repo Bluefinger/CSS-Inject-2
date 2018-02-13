@@ -54,13 +54,14 @@ const removeObjectInline = function(elems, object) {
     return this.removeArrayInline(elems, Object.keys(object));
 };
 
-export default Mixin(superclass => class CssInline extends superclass {
-    constructor() {
-        super(...arguments);
-        this.addInline = addInline;
-        this.removeInline = removeInline;
-        this.addObjectInline = addObjectInline;
-        this.removeObjectInline = removeObjectInline;
-        this.removeArrayInline = removeArrayInline;
-    }
+export default Mixin(superclass => {
+    class CssInline extends superclass {}
+
+    CssInline.prototype.addInline = addInline;
+    CssInline.prototype.removeInline = removeInline;
+    CssInline.prototype.addObjectInline = addObjectInline;
+    CssInline.prototype.removeObjectInline = removeObjectInline;
+    CssInline.prototype.removeArrayInline = removeArrayInline;
+
+    return CssInline;
 })

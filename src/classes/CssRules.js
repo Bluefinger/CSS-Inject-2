@@ -85,13 +85,14 @@ const arrayRemove = function(array) {
     return this;
 }
 
-export default Mixin(superclass => class CssRules extends superclass {
-    constructor() {
-        super(...arguments);
-        this.add = add;
-        this.remove = remove;
-        this.objectAdd = objectAdd;
-        this.objectRemove = objectRemove;
-        this.arrayRemove = arrayRemove;
-    }
+export default Mixin(superclass => {
+    class CssRules extends superclass {}
+
+    CssRules.prototype.add = add;
+    CssRules.prototype.remove = remove;
+    CssRules.prototype.objectAdd = objectAdd;
+    CssRules.prototype.objectRemove = objectRemove;
+    CssRules.prototype.arrayRemove = arrayRemove;
+
+    return CssRules;
 })
