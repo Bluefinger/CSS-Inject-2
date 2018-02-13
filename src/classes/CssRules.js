@@ -12,7 +12,6 @@ const add = function (selector, property, value) {
         const str = (!value) ? property : property + ":" + value + ";";
         this.obj.insertRule(`${selector}{${str}}`, i);
     }
-
     return this;
 };
 
@@ -42,6 +41,7 @@ const objectAdd = function(object) {
     } else {
         throw new TypeError("Parameter is not an object");
     }
+    return this;
 };
 
 const remove = function (selector, property) {
