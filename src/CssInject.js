@@ -1,7 +1,6 @@
 "use strict";
 
 import { mix } from "mixwith";
-
 import CssBase from "./classes/CssBase";
 import CssRules from "./classes/CssRules";
 import CssInline from "./classes/CssInline";

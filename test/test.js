@@ -2,12 +2,75 @@
 "use strict";
 
 import assert from "assert";
+import CssBase from "../src/classes/CssBase";
+import CssRules from "../src/classes/CssRules";
+import CssInline from "../src/classes/CssInline";
 import cssInject from "../src/CssInject";
 
 const STYLES = { modifier: "StylesOnly" };
 const INLINE = { modifier: "InlineOnly" };
 
 describe("CssInject", function() {
+    describe("Full Instance", function() {
+        const full = cssInject();
+
+        it("should be an instance of CssBase", function() {
+            assert.ok(full instanceof CssBase);
+        });
+
+        it("should be an instance of CssRules", function() {
+            assert.ok(full instanceof CssRules);
+        });
+
+        it("should be an instance of CssInline", function() {
+            assert.ok(full instanceof CssInline);
+        });
+
+        after(function() {
+            full.destroy();
+        });
+    });
+
+    describe("StylesOnly Instance", function() {
+        const styles = cssInject(STYLES);
+
+        it("should be an instance of CssBase", function() {
+            assert.ok(styles instanceof CssBase);
+        });
+
+        it("should be an instance of CssRules", function() {
+            assert.ok(styles instanceof CssRules);
+        });
+
+        it("should NOT be an instance of CssInline", function() {
+            assert.ifError(styles instanceof CssInline);
+        });
+
+        after(function() {
+            styles.destroy();
+        });
+    });
+
+    describe("InlineOnly Instance", function() {
+        const inline = cssInject(INLINE);
+
+        it("should be an instance of CssBase", function() {
+            assert.ok(inline instanceof CssBase);
+        });
+
+        it("should be an instance of CssInline", function() {
+            assert.ok(inline instanceof CssInline);
+        });
+
+        it("should NOT be an instance of CssRules", function() {
+            assert.ifError(inline instanceof CssRules);
+        });
+
+        after(function() {
+            inline.destroy();
+        });
+    });
+
     describe("init()", function() {
         const test = cssInject();
 
@@ -173,7 +236,7 @@ describe("CssRules", function() {
     });
 
     describe("arrayRemove()", function() {
-        before(function() {
+        beforeEach(function() {
             styles.objectAdd({
                 "div": { "border": "5px solid #ff0000" },
                 "p": {
@@ -183,13 +246,19 @@ describe("CssRules", function() {
             });
         });
 
+        it("should remove one rule provided in the array", function() {
+            styles.arrayRemove(["p"]);
+
+            assert.ifError(styles.rules[1]);
+        });
+
         it("should remove all rules provided in the array", function() {
             styles.arrayRemove([
                 "div",
                 "p"
             ]);
 
-            assert.ifError(styles.rules[1]);
+            assert.ifError(styles.rules[0]);
         });
     });
 
@@ -200,7 +269,6 @@ describe("CssRules", function() {
 
 describe("CssInline", function() {
     const inline = cssInject(INLINE);
-    const full = cssInject();
     const div = document.createElement("div");
 
     it("InlineOnly mode should not put a stylesheet in the document head", function() {
@@ -210,25 +278,25 @@ describe("CssInline", function() {
 
     describe("addInline()", function() {
         it("should add new style properties to an element", function() {
-            full.addInline(div, "border", "5px solid #ff0000");
+            inline.addInline(div, "border", "5px solid #ff0000");
 
             assert.equal(div.style.border, "5px solid rgb(255, 0, 0)");
         });
 
         it("should modify existing style properties to an element", function() {
-            full.addInline(div, "border", "5px solid #ffff00");
+            inline.addInline(div, "border", "5px solid #ffff00");
 
             assert.equal(div.style.cssText, "border: 5px solid rgb(255, 255, 0);");
         });
 
         after(function() {
-            full.removeInline(div, "border");
+            inline.removeInline(div, "border");
         });
     });
 
     describe("addObjectInline()", function() {
         it("should add new style properties to an element via an object", function() {
-            full.addObjectInline(div, {
+            inline.addObjectInline(div, {
                 "background-color": "#ff0000",
                 "border": "5px solid #ff0000"
             });
@@ -237,7 +305,7 @@ describe("CssInline", function() {
         });
 
         it("should modify existing style properties to an element via an object", function() {
-            full.addObjectInline(div, {
+            inline.addObjectInline(div, {
                 "background-color": "#0000ff",
                 "border": "5px solid #00ff00"
             });
@@ -246,7 +314,7 @@ describe("CssInline", function() {
         });
 
         after(function() {
-            full.removeArrayInline(div, [
+            inline.removeArrayInline(div, [
                 "background-color",
                 "border"
             ]);
@@ -255,24 +323,24 @@ describe("CssInline", function() {
 
     describe("removeInline()", function() {
         before(function() {
-            full.addInline(div, "border", "5px solid #ff0000")
+            inline.addInline(div, "border", "5px solid #ff0000")
                 .addInline(div, "background-color", "#ff0000");
         });
 
         it("should remove style properties from the element", function() {
-            full.removeInline(div, "background-color");
+            inline.removeInline(div, "background-color");
 
             assert.equal(div.style.cssText, "border: 5px solid rgb(255, 0, 0);");
         });
 
         after(function() {
-            full.removeInline(div, "border");
+            inline.removeInline(div, "border");
         });
     });
 
     describe("removeArrayInline()", function() {
         beforeEach(function() {
-            full.addObjectInline(div, {
+            inline.addObjectInline(div, {
                 "background-color": "#0000ff",
                 "border": "5px solid #00ff00",
                 "font-size": "14px"
@@ -280,13 +348,13 @@ describe("CssInline", function() {
         });
 
         it("should remove one style property without affecting others from the element", function() {
-            full.removeArrayInline(div, ["background-color"]);
+            inline.removeArrayInline(div, ["background-color"]);
 
             assert.equal(div.style.cssText, 'border: 5px solid rgb(0, 255, 0); font-size: 14px;');
         });
 
         it("should remove all style properties from the element", function() {
-            full.removeArrayInline(div, [
+            inline.removeArrayInline(div, [
                 "background-color",
                 "border",
                 "font-size"
@@ -298,7 +366,7 @@ describe("CssInline", function() {
 
     describe("removeObjectInline()", function() {
         beforeEach(function() {
-            full.addObjectInline(div, {
+            inline.addObjectInline(div, {
                 "background-color": "#0000ff",
                 "border": "5px solid #00ff00",
                 "font-size": "14px"
@@ -306,13 +374,13 @@ describe("CssInline", function() {
         });
 
         it("should remove one property without affecting other from the element via an object", function() {
-            full.removeObjectInline(div, { "background-color": true });
+            inline.removeObjectInline(div, { "background-color": true });
 
             assert.equal(div.style.cssText, 'border: 5px solid rgb(0, 255, 0); font-size: 14px;');
         });
 
         it("should remove all properties from the element via an object", function() {
-            full.removeObjectInline(div, {
+            inline.removeObjectInline(div, {
                 "background-color": true,
                 "border": true,
                 "font-size": true
@@ -323,7 +391,6 @@ describe("CssInline", function() {
     });
 
     after(function() {
-        full.destroy();
         inline.destroy();
     });
 });

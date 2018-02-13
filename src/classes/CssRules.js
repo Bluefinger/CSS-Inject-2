@@ -55,7 +55,6 @@ const remove = function (selector, property) {
             this.obj.deleteRule(index)
         }
     }
-
     return this;
 };
 
@@ -77,11 +76,9 @@ const objectRemove = function(object) {
 }
 
 const arrayRemove = function(array) {
-    
     for (let i = 0, len = array.length; i < len; i++) {
         this.remove(array[i]);
     }
-
     return this;
 }
 

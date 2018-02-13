@@ -20,19 +20,16 @@ const init = function() {
 };
 
 const destroy = function() {
-
     if (this.el) {
         let head = this.el.parentNode;
         head.removeChild(this.el);
         this.el = null;
     }
-    
     this.id = null;
     this.media = null;
     this.rules = null;
     this.obj = null;
     this.styles = null;
-    
 }
 
 export default class CssBase {

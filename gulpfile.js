@@ -20,7 +20,7 @@ const customOpts = {
 const opts = Object.assign({}, watchify.args, customOpts);
 const b = watchify(browserify(opts));
 
-const testOpts = { reporter: "dot" };
+const testOpts = { reporter: "spec" };
 
 const babelOpts = {
     global: true,
