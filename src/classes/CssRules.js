@@ -1,6 +1,16 @@
 "use strict";
 import { Mixin } from "mixwith";
 
+/**
+ * Adds a new style rule or modifies an existing rule with new properties and/or values
+ * 
+ * @this {CssBase}
+ * @param  {string} selector The CSS selector for the style rule
+ * @param  {string} property The CSS property for the style rule
+ * @param  {string} value The value of the CSS property
+ * @chainable
+ * @returns {CssBase} Chaining method, returns itself
+ */
 const add = function (selector, property, value) {
     const index = this.styles.indexOf(selector);
 
@@ -15,6 +25,14 @@ const add = function (selector, property, value) {
     return this;
 };
 
+/**
+ * Adds new style rules or modifies existing rules via a provided object detailing all the styles to be added/modified
+ * 
+ * @this {CssBase}
+ * @param  {Object.<string, Object.<string, string>>} object An object detailing all the styles to be provided, keys being selectors and sub-keys properties
+ * @chainable
+ * @returns {CssBase} Chaining method, returns itself
+ */
 const objectAdd = function(object) {
     if (typeof object === "object") {
         for (let selector in object) {
@@ -40,6 +58,15 @@ const objectAdd = function(object) {
     return this;
 };
 
+/**
+ * Removes a style rule or a property if the latter is provided
+ * 
+ * @this {CssBase}
+ * @param  {string} selector The CSS selector for the rule
+ * @param  {string} [property] The CSS property to be removed
+ * @chainable
+ * @returns {CssBase} Chaining method, returns itself
+ */
 const remove = function (selector, property) {
     const index = this.styles.indexOf(selector);
 
@@ -54,6 +81,14 @@ const remove = function (selector, property) {
     return this;
 };
 
+/**
+ * Removes new style rules or properties via a provided object detailing all the styles to be deleted
+ * 
+ * @this {CssBase}
+ * @param  {Object.<string, Object.<string, any>>} object An object detailing all the styles to be removed, keys being selectors and sub-keys being properties
+ * @chainable
+ * @returns {CssBase} Chaining method, returns itself
+ */
 const objectRemove = function(object) {
     if (typeof object === "object") {
         for (let selector in object) {
@@ -75,6 +110,14 @@ const objectRemove = function(object) {
     return this;
 }
 
+/**
+ * Removes new style rules or properties via a provided object detailing all the styles to be deleted
+ * 
+ * @this {CssBase}
+ * @param  {Array.<string>} array An Array of CSS Selectors to remove from the stylesheet
+ * @chainable
+ * @returns {CssBase} Chaining method, returns itself
+ */
 const arrayRemove = function(array) {
     for (let i = 0, len = array.length; i < len; i++) {
         this.remove(array[i]);
@@ -82,6 +125,10 @@ const arrayRemove = function(array) {
     return this;
 }
 
+/**
+ * A Mixin for Stylesheet manipulation
+ * @mixin
+ */
 export default Mixin(superclass => {
     class CssRules extends superclass {}
 

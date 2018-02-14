@@ -2,6 +2,12 @@
 
 let idCount = 0;
 
+/**
+ * Initialises a <style></style> element in the document head and syncs the CSSStylesheet object to CssInject
+ * 
+ * @this {CssBase}
+ * @return {CssBase} returns itself, chaining method
+ */
 const init = function() {
     let head;
 
@@ -19,6 +25,12 @@ const init = function() {
     return this;
 };
 
+/**
+ * Removes its <style> element from the document head and destroys itself
+ * 
+ * @this {CssBase}
+ * @return {void}
+ */
 const destroy = function() {
     if (this.el) {
         let head = this.el.parentNode;
@@ -32,7 +44,16 @@ const destroy = function() {
     this.styles = null;
 }
 
+/** The Base CssInject Class, representing a style instance to be modified and controlled by CssInject */
 export default class CssBase {
+
+    /**
+     * Initialises the state of CssInject and what kind of stylesheet it is.
+     * 
+     * @param  {string} [id] A unique ID for the style element, else it defaults to 'css-inject-{idCount}', which increments with each new instance 
+     * @param  {string} [media] Defaults to "screen", but can be used to modify what sort of stylesheet the instance represents, like a dynamic print stylesheet
+     * @memberof CssInject
+     */
     constructor(id = `css-inject-${idCount++}`, media = "screen") {
         this.id = id;
         this.media = media;
