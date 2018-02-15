@@ -64,7 +64,7 @@ class Full extends mix(CssBase).with(CssRules, CssInline) {
  * @param  {object} [opts] Defaults to an empty object if not provided
  * @param  {string} [opts.id] The ID for the stylesheet
  * @param  {string} [opts.media] The media string to define what kind of stylesheet it is
- * @param  {(string|number)} [opts.modifier] A string or number value to specific what features are initialised for the CssInject instance
+ * @param  {(string|number)} [opts.modifier] A string or number value to specify what features are initialised for the CssInject instance
  * @returns {(Full|InlineOnly|StylesOnly)} returns a mixed CssBase class depending on the modifiers provided
  */
 const create = function (opts = {}) {
