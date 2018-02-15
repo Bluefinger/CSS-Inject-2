@@ -145,6 +145,7 @@ Due to there not needing a selector to be attached to the object as the styles a
 ```
 ["property 1", "property 2", ... ]
 ```
+The same object structure can be used too for removal, except all values are ignored as the keys from the Object are converted to an array and then passed to the array removal method.
 
 ### Properties
 #### CssBase.styles
@@ -252,4 +253,15 @@ Removes the properties listed in the array from an element or a collection of el
 var arr = ["font-weight", "background"],
     elements = document.getElementsByClassName("stuff");
 cssInject.removeArrayInline(elements, arr);
+```
+
+#### CssInline.removeObjectInline(elements, object)
+Removes the properties listed in the object from an element or a collection of elements. This is a convenience method for using the same object or object structure for setting CSS properties to elements for removal, as the provided object is converted to an Array of keys and then passed into `.removeArrayInline()`. All values attached to each property are ignored.
+```js
+var css = {
+        "font-weight" : "bold",
+        "background" : "#ccc"
+    },
+    elements = document.getElementsByClassName("stuff");
+cssInject.removeObjectInline(elements, css);
 ```
