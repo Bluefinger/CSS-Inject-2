@@ -1,3 +1,7 @@
+/**
+ * @module CssRules
+ */
+
 "use strict";
 import { Mixin } from "mixwith";
 
@@ -126,10 +130,19 @@ const arrayRemove = function(array) {
 }
 
 /**
- * A Mixin for Stylesheet manipulation
- * @mixin
+ * Create a CssRules mixin class.
+ *
+ * @exports cssrules
+ * @param {*} superclass - The class to mix onto.
+ * @return {module:cssrules~mixin} The mixin class.
  */
-export default Mixin(superclass => {
+const CssRulesMixin = Mixin(superclass => {
+
+    /**
+     * A Mixin for Stylesheet manipulation
+     * @mixin
+     * @alias module:cssrules~mixin
+     */
     class CssRules extends superclass {}
 
     CssRules.prototype.add = add;
@@ -139,4 +152,6 @@ export default Mixin(superclass => {
     CssRules.prototype.arrayRemove = arrayRemove;
 
     return CssRules;
-})
+});
+
+export default CssRulesMixin

@@ -5,14 +5,11 @@ import assert from "assert";
 import CssBase from "../src/classes/CssBase";
 import CssRules from "../src/classes/CssRules";
 import CssInline from "../src/classes/CssInline";
-import cssInject from "../src/CssInject";
-
-const STYLES = { modifier: "StylesOnly" };
-const INLINE = { modifier: "InlineOnly" };
+import * as CssInject from "../src/CssInject";
 
 describe("CssInject", function() {
     describe("Full Instance", function() {
-        const full = cssInject();
+        const full = new CssInject.Full();
 
         it("should be an instance of CssBase", function() {
             assert.ok(full instanceof CssBase);
@@ -32,7 +29,7 @@ describe("CssInject", function() {
     });
 
     describe("StylesOnly Instance", function() {
-        const styles = cssInject(STYLES);
+        const styles = new CssInject.StylesOnly();
 
         it("should be an instance of CssBase", function() {
             assert.ok(styles instanceof CssBase);
@@ -52,7 +49,7 @@ describe("CssInject", function() {
     });
 
     describe("InlineOnly Instance", function() {
-        const inline = cssInject(INLINE);
+        const inline = new CssInject.InlineOnly();
 
         it("should be an instance of CssBase", function() {
             assert.ok(inline instanceof CssBase);
@@ -72,7 +69,7 @@ describe("CssInject", function() {
     });
 
     describe("init()", function() {
-        const test = cssInject();
+        const test = new CssInject.Full();
 
         it("should put a style element in the document head", function() {
             const el = document.getElementById(test.id);
@@ -100,7 +97,7 @@ describe("CssInject", function() {
         let test;
 
         beforeEach(function () {
-            test = cssInject();
+            test = new CssInject.Full();
         });
 
         it("should remove the stylesheet from the document head", function() {
@@ -119,7 +116,7 @@ describe("CssInject", function() {
 });
 
 describe("CssRules", function() {
-    const styles = cssInject(STYLES);
+    const styles = new CssInject.StylesOnly();
 
     describe("add()", function() {
         it("should add a new rule with a given selector, CSS property and value", function() {
@@ -268,7 +265,7 @@ describe("CssRules", function() {
 });
 
 describe("CssInline", function() {
-    const inline = cssInject(INLINE);
+    const inline = new CssInject.InlineOnly()
     const div = document.createElement("div");
 
     it("InlineOnly mode should not put a stylesheet in the document head", function() {

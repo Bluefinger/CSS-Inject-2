@@ -103,10 +103,20 @@ const removeObjectInline = function(elems, object) {
 };
 
 /**
- * A Mixin for Inline Styles manipulation
- * @mixin CssInline
+ * Create a CssInline mixin class.
+ *
+ * @exports cssinline
+ * @param {*} superclass - The class to mix onto.
+ * @return {module:cssinline~mixin} The mixin class.
  */
-export default Mixin(superclass => {
+const CssInlineMixin = Mixin(superclass => {
+
+    /**
+     * CssInline mixin.
+     *
+     * @mixin
+     * @alias module:cssinline~mixin
+     */
     class CssInline extends superclass {}
 
     CssInline.prototype.addInline = addInline;
@@ -117,3 +127,5 @@ export default Mixin(superclass => {
 
     return CssInline;
 })
+
+export default CssInlineMixin

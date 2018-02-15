@@ -52,7 +52,6 @@ export default class CssBase {
      * 
      * @param  {string} [id] A unique ID for the style element, else it defaults to 'css-inject-{idCount}', which increments with each new instance 
      * @param  {string} [media] Defaults to "screen", but can be used to modify what sort of stylesheet the instance represents, like a dynamic print stylesheet
-     * @memberof CssInject
      */
     constructor(id = `css-inject-${idCount++}`, media = "screen") {
         this.id = id;
