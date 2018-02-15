@@ -12,10 +12,18 @@
   "dependencies": {
     "mixwith": "^0.1.1"
   },
+  "browserify": {
+    "transforms": ["babelify", {
+        "presets": ["env"],
+        "plugins": ["transform-es2015-modules-commonjs"]
+      }
+    ]
+  },
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
+    "babel-plugin-transform-es2015-modules-umd-2": "^6.24.1",
     "babelify": "^8.0.0",
     "browserify": "^16.0.0",
     "gulp": "github:gulpjs/gulp#4.0",

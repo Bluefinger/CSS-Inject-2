@@ -78,7 +78,7 @@ Just include the script and away you go. The minified file is 8.83kB large, so i
 <script type="text/javascript" src="css-inject.js"></script>
 <script type="text/javascript">
 
-    var cssInject = new CssInject();
+    var cssInject = new cssInject.CssInject();
     cssInject.add("body", "font-size", "14px");
 
 </script>

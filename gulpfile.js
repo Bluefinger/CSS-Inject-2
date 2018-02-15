@@ -15,7 +15,8 @@ const mochify = require("mochify");
 // add custom browserify options here
 const customOpts = {
     debug: true,
-    entries: ['./src/CssInject.js']
+    entries: ['./src/CssInject.js'],
+    standalone: "css-inject"
 };
 const opts = Object.assign({}, watchify.args, customOpts);
 const b = watchify(browserify(opts));
@@ -43,7 +44,7 @@ const bundle = function() {
     return b.bundle()
         // log errors if they happen
         .on('error', log.error.bind(log, 'Browserify Error'))
-        .pipe(source('cssinject.js'))
+        .pipe(source('css-inject.js'))
         // optional, remove if you don't need to buffer file contents
         .pipe(buffer())
         // loads map from browserify file
