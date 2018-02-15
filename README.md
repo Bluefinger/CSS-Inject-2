@@ -155,7 +155,7 @@ cssInject.styles[1] // Returns the selector name at the given index
 ```
 
 #### CssBase.id
-Stores the string which forms the id attribute for the generated stylesheet. Change from the default of `css-inject-style` if in need of a different id or to resolve a conflict.
+Stores the string which forms the id attribute for the generated stylesheet. Change from the default of `css-inject-${id}` (which the id increments automatically with each new instance of CssInject) if in need of a different id or to resolve a conflict.
 
 #### CssBase.media
 Stores the media type for the `cssInject` stylesheet. Default is "screen". Can be changed to implement a media query.
