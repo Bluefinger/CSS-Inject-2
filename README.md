@@ -53,21 +53,21 @@ cssInject.remove("#content > p", "font-weight").remove("#content");
 // In a valid object to pass to cssInject, the top level key corresponds to the selector,
 // and the second level keys correspond to the css properties.
 var rules = {
-	"#content": {
-		"height":"200px"
-		"width":"300px"
-	}
+    "#content": {
+        "height":"200px"
+        "width":"300px"
+    }
 }, selector = "#aside";
 // Selectors can be dynamically defined and attached to an object.
 rules[selector] = {
-	"background-color":"#ccc"
+    "background-color":"#ccc"
 };
 cssInject.objectAdd(rules); // Inject the resulting CSS to the page
 ```
 ### Inline Styles
 ```javascript
 var element = document.getElementById("content"),
-	elements = document.getElementsByClassName("stuff");
+    elements = document.getElementsByClassName("stuff");
 cssInject.addInline(element, "width", "300px"); // Only sets to a single element
 cssInject.addObjectInline(elements, {"height":"200px"}); Adds to lots of elements
 ```
@@ -115,15 +115,15 @@ Importing CSS-Inject 2 with a default loads a Factory Function whichs returns Cs
 `cssInject` follows a particular format when mapping CSS styles to an object. In order to simplify how selectors and properties are mapped and handled, both selectors and properties form the keys of an object. So a given selector is the key to an object, which contains properties that are keys to values. The expected format for a `cssInject` style object is then as follows:
 ```
 {
-	"selector" : {
-		"property" : "value"
-	}
+    "selector" : {
+        "property" : "value"
+    }
 }
 ```
 This allows an object to mirror the logical construction of a CSS style rule, and in turn simplifies the process of traversing the object to match and add/amend styles, as well as parsing out the object into CSS. Removing styles uses the same object format, but ignores any values that might be passed with properties:
 ```
 {
-	"selector": {
+    "selector": {
         "property": <any>
     }
 }
@@ -138,7 +138,7 @@ It is also possible to remove entire rules in one operation with an array of str
 For inline elements, the object model for adding styles is as follows:
 ```
 {
-	"property" : "value"
+    "property" : "value"
 }
 ```
 Due to there not needing a selector to be attached to the object as the styles are applied directly to the element, the object is simplified to only need to the properties and their corresponding values be declared. With there being no need to have a selector, removing style properties from inline objects requires only an array containing the properties that are being removed:
@@ -186,10 +186,10 @@ Maps a given object to the `cssInject` stylesheet and updates the `cssInject.sty
 ```js
 // Create an object to store CSS declarations
 var rules = {
-	"#content" : {
-		"height" : "200px",
-		"width": : "300px"
-	}
+    "#content" : {
+        "height" : "200px",
+        "width": : "300px"
+    }
 };
 cssInject.objectAdd(rules); // Import object into queue
 ```
@@ -204,12 +204,12 @@ cssInject.remove("#content", "height"); // The height property is no longer pres
 Removes all mapped selectors and properties in the passed object. If a selector has an array of properties, those specific properties get removed. If a selector is passed with an empty array, the entire selector rule gets removed. This method can be chained.
 ```js
 var purge = {
-	"#content" : {
+    "#content" : {
         // Height and Background properties will be deleted
         "height": true,
         "background": true
     },
-	"#aside" : {} // The entire #aside CSS rule will be deleted
+    "#aside" : {} // The entire #aside CSS rule will be deleted
 }
 cssInject.objectRemove(obj);
 ```
@@ -232,10 +232,10 @@ cssInject.addInline(el, "width", "300px");
 Maps an object of css properties/values to the styles of either a single element or a collection of elements. This method can be chained.
 ```js
 var css = {
-		"font-weight" : "bold",
-		"background" : "#ccc"
-	},
-	elements = document.getElementsByClassName("stuff");
+        "font-weight" : "bold",
+        "background" : "#ccc"
+    },
+    elements = document.getElementsByClassName("stuff");
 cssInject.addObjectInline(elements, css);
 ```
 
@@ -250,6 +250,6 @@ cssInject.removeInline(el, "height");
 Removes the properties listed in the array from an element or a collection of elements. If an empty array is provided, all the inline styles in the element(s) are removed. This method can be chained.
 ```js
 var arr = ["font-weight", "background"],
-	elements = document.getElementsByClassName("stuff");
+    elements = document.getElementsByClassName("stuff");
 cssInject.removeArrayInline(elements, arr);
 ```
