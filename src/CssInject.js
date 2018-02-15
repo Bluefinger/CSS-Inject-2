@@ -8,22 +8,21 @@ import CssBase from "./classes/CssBase";
 import CssRules from "./classes/CssRules";
 import CssInline from "./classes/CssInline";
 
-
 /**
  * The Inline Only CssInject Class without Stylesheet mixins
  * 
  * @extends CssBase
- * @mixes CssInline
+ * @mixes CssInline~mixin
  */
-export class InlineOnly extends mix(CssBase).with(CssInline) {}
+class InlineOnly extends mix(CssBase).with(CssInline) {}
 
 /**
  * The Styles Only CssInject Class without Inline mixins
  * 
  * @extends CssBase
- * @mixes CssRules
+ * @mixes CssRules~mixin
  */
-export class StylesOnly extends mix(CssBase).with(CssRules) {
+class StylesOnly extends mix(CssBase).with(CssRules) {
 
     /**
      * Initialises the state of CssInject and what kind of stylesheet it is.
@@ -41,10 +40,10 @@ export class StylesOnly extends mix(CssBase).with(CssRules) {
  * The Full CssInject Class with both Stylesheet and Inline mixins
  * 
  * @extends CssBase
- * @mixes CssRules
- * @mixes CssInline
+ * @mixes CssRules~mixin
+ * @mixes CssInline~mixin
  */
-export class Full extends mix(CssBase).with(CssRules, CssInline) {
+class Full extends mix(CssBase).with(CssRules, CssInline) {
 
     /**
      * Initialises the state of CssInject and what kind of stylesheet it is.
@@ -61,13 +60,14 @@ export class Full extends mix(CssBase).with(CssRules, CssInline) {
 /**
  * Factory Function for creating CssInject instances
  * 
+ * @function
  * @param  {object} [opts] Defaults to an empty object if not provided
  * @param  {string} [opts.id] The ID for the stylesheet
  * @param  {string} [opts.media] The media string to define what kind of stylesheet it is
  * @param  {(string|number)} [opts.modifier] A string or number value to specific what features are initialised for the CssInject instance
  * @returns {(Full|InlineOnly|StylesOnly)} returns a mixed CssBase class depending on the modifiers provided
  */
-export default function create(opts = {}) {
+const create = function (opts = {}) {
     const { id, media, modifier } = opts;
 
     switch (modifier) {
@@ -81,4 +81,11 @@ export default function create(opts = {}) {
 
         default: return new Full(id, media);
     }
+}
+
+export {
+    InlineOnly as CssInline,
+    StylesOnly as CssStyle,
+    Full as CssInject,
+    create as default
 }
