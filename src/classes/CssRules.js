@@ -40,6 +40,25 @@ const fetchProperty = function(instance, property) {
 }
 
 /**
+ * Process a CssRulesObject and execute the provided function as you iterate through each selector
+ * 
+ * @param {CssRulesObject} object CssRulesObject to be processed
+ * @param {function(string, string[], Object.<string, string>) : void} func Callback for each selector
+ * @returns {void}
+ */
+const processSelectors = function(object, func) {
+    if (typeof object === "object") {
+        for (let selector in object) {
+            if (object.hasOwnProperty(selector)) {
+                func(selector, Object.keys(object[selector]), object[selector]);
+            }
+        }
+    } else {
+        throw new TypeError("Parameter is not an object");
+    }
+};
+
+/**
  * Removes its <style> element from the document head and destroys itself
  * 
  * @this {CssRules}
@@ -90,28 +109,16 @@ const add = function (selector, property, value) {
  * @returns {CssRules} Chaining method, returns itself
  */
 const objectAdd = function(object) {
-    if (typeof object === "object") {
-        const styles = fetchProperty(this, "styles");
-        for (let selector in object) {
-            if (object.hasOwnProperty(selector)) {
-                let str = "";
-                const index = styles.indexOf(selector);
-                for (let property in object[selector]) {
-                    if (object[selector].hasOwnProperty(property)) {
-                        let value = object[selector][property];
-                        if (index === -1) {
-                            str += property + ":" + value + ";";
-                        } else {
-                            this.add(selector, property, value);
-                        }
-                    }
-                }
-                if (index === -1) this.add(selector,str);
-            }
+    const styles = fetchProperty(this, "styles");
+
+    processSelectors(object, (selector, properties, rule) => {
+        const index = styles.indexOf(selector);
+        if (index === -1) {
+            this.add(selector, properties.reduce((acc, prop) => `${acc}${prop}:${rule[prop]};`, ''));
+        } else {
+            properties.forEach(prop => this.add(selector, prop, rule[prop]));
         }
-    } else {
-        throw new TypeError("Parameter is not an object");
-    }
+    });
     return this;
 };
 
@@ -148,23 +155,14 @@ const remove = function (selector, property) {
  * @returns {CssRules} Chaining method, returns itself
  */
 const objectRemove = function(object) {
-    if (typeof object === "object") {
-        for (let selector in object) {
-            if (object.hasOwnProperty(selector)) {
-                const properties = Object.keys(object[selector]);
-                const l = properties.length;
-                if (l > 0) {
-                    for (let i=0;i<l;i+=1) {
-                        this.remove(selector, properties[i]);
-                    }
-                } else {
-                    this.remove(selector);
-                }
-            }
+    processSelectors(object, (selector, properties) => {
+        const l = properties.length;
+        if (l > 0) {
+            properties.forEach(prop => this.remove(selector, prop));
+        } else {
+            this.remove(selector);
         }
-    } else {
-        throw new TypeError("Parameter is not an object");
-    }
+    });
     return this;
 }
 
