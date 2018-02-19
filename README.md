@@ -79,7 +79,7 @@ inline.addObjectInline(elements, {"height":"200px"}); Adds to lots of elements
 ```
 
 ## Usage
-Just include the script and away you go. The minified file is 4.90KB large, so it has a tiny footprint on your site. Modern Browsers such as Firefox, Chrome, and Internet Explorer 11 and Microsoft Edge should all function correctly without need of dependencies/shims.
+Just include the script and away you go. The minified file is 4.89KB large, so it has a tiny footprint on your site. Modern Browsers such as Firefox, Chrome, and Internet Explorer 11 and Microsoft Edge should all function correctly without need of dependencies/shims.
 ```html
 <script type="text/javascript" src="css-inject.js"></script>
 <script type="text/javascript">

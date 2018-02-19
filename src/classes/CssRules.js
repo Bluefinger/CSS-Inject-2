@@ -67,16 +67,16 @@ const destroy = function() {
  * @returns {CssRules} Chaining method, returns itself
  */
 const add = function (selector, property, value) {
-    const props = PROTECTED.get(this);
-    const index = props.styles.indexOf(selector);
+    const { styles, rules, obj } = PROTECTED.get(this);
+    const index = styles.indexOf(selector);
 
     if (index > -1) {
-        props.rules[index].style.setProperty(property,value);
+        rules[index].style.setProperty(property,value);
     } else {
-        const i = props.styles.length;
-        props.styles.push(selector);
+        const i = styles.length;
+        styles.push(selector);
         const str = (!value) ? property : property + ":" + value + ";";
-        props.obj.insertRule(`${selector}{${str}}`, i);
+        obj.insertRule(`${selector}{${str}}`, i);
     }
     return this;
 };
