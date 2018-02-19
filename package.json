@@ -9,9 +9,6 @@
   },
   "author": "",
   "license": "MIT",
-  "dependencies": {
-    "mixwith": "^0.1.1"
-  },
   "browserify": {
     "transforms": ["babelify", {
         "presets": ["env"],
@@ -27,14 +24,12 @@
     "babelify": "^8.0.0",
     "browserify": "^16.0.0",
     "gulp": "github:gulpjs/gulp#4.0",
-    "gulp-if": "^2.0.2",
     "gulp-sourcemaps": "^2.6.4",
     "gulp-uglify": "^3.0.0",
     "gulplog": "^1.0.0",
     "mochify": "^5.2.0",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0",
-    "watchify": "^3.10.0",
-    "yargs": "^11.0.0"
+    "watchify": "^3.10.0"
   }
 }

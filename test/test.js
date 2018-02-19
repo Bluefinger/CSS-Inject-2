@@ -2,25 +2,18 @@
 "use strict";
 
 import assert from "assert";
-import CssBase from "../src/classes/CssBase";
-import CssRulesMixin from "../src/classes/CssRules";
-import CssInlineMixin from "../src/classes/CssInline";
-import { CssInject, CssInline, CssStyle } from "../src/CssInject";
+import { default as CssInject, CssRules, CssInline } from "../src/CssInject";
 
 describe("CssInject", function() {
-    describe("Full Instance", function() {
-        const full = new CssInject();
+    describe("CssRules Instance", function() {
+        const full = CssInject();
 
-        it("should be an instance of CssBase", function() {
-            assert.ok(full instanceof CssBase);
+        it("should be a function", function() {
+            assert.equal(typeof CssInject, "function");
         });
 
-        it("should be an instance of CssRules", function() {
-            assert.ok(full instanceof CssRulesMixin);
-        });
-
-        it("should be an instance of CssInline", function() {
-            assert.ok(full instanceof CssInlineMixin);
+        it("should return an instance of CssRules", function() {
+            assert.ok(full instanceof CssRules);
         });
 
         after(function() {
@@ -28,48 +21,8 @@ describe("CssInject", function() {
         });
     });
 
-    describe("StylesOnly Instance", function() {
-        const styles = new CssStyle();
-
-        it("should be an instance of CssBase", function() {
-            assert.ok(styles instanceof CssBase);
-        });
-
-        it("should be an instance of CssRules", function() {
-            assert.ok(styles instanceof CssRulesMixin);
-        });
-
-        it("should NOT be an instance of CssInline", function() {
-            assert.ifError(styles instanceof CssInlineMixin);
-        });
-
-        after(function() {
-            styles.destroy();
-        });
-    });
-
-    describe("InlineOnly Instance", function() {
-        const inline = new CssInline();
-
-        it("should be an instance of CssBase", function() {
-            assert.ok(inline instanceof CssBase);
-        });
-
-        it("should be an instance of CssInline", function() {
-            assert.ok(inline instanceof CssInlineMixin);
-        });
-
-        it("should NOT be an instance of CssRules", function() {
-            assert.ifError(inline instanceof CssRulesMixin);
-        });
-
-        after(function() {
-            inline.destroy();
-        });
-    });
-
     describe("init()", function() {
-        const test = new CssInject();
+        const test = CssInject();
 
         it("should put a style element in the document head", function() {
             const el = document.getElementById(test.id);
@@ -77,7 +30,7 @@ describe("CssInject", function() {
         });
 
         it("should initialise the styles array", function () {
-            assert.ok(test.styles.length !== undefined);
+            assert.notEqual(test.styles.length, undefined);
         });
 
         it("should contain an instance of the initialised stylesheet", function() {
@@ -86,6 +39,14 @@ describe("CssInject", function() {
 
         it("should contain an instance of the Css Rules object", function() {
             assert.ok(test.rules instanceof CSSRuleList);
+        });
+
+        it("should initialise all the protected properties", function() {
+            assert.equal(test.media, "screen");
+        })
+
+        it("should prevent mutation of protected properties once initialised", function() {
+            assert.throws(() => { test.media = "print" });
         });
 
         after(function() {
@@ -97,7 +58,7 @@ describe("CssInject", function() {
         let test;
 
         beforeEach(function () {
-            test = new CssInject();
+            test = CssInject();
         });
 
         it("should remove the stylesheet from the document head", function() {
@@ -116,7 +77,7 @@ describe("CssInject", function() {
 });
 
 describe("CssRules", function() {
-    const styles = new CssStyle();
+    const styles = new CssRules();
 
     describe("add()", function() {
         it("should add a new rule with a given selector, CSS property and value", function() {
@@ -265,7 +226,7 @@ describe("CssRules", function() {
 });
 
 describe("CssInline", function() {
-    const inline = new CssInline()
+    const inline = CssInline;
     const div = document.createElement("div");
 
     it("InlineOnly mode should not put a stylesheet in the document head", function() {
@@ -385,9 +346,5 @@ describe("CssInline", function() {
 
             assert.equal(div.style.cssText, '');
         });
-    });
-
-    after(function() {
-        inline.destroy();
     });
 });

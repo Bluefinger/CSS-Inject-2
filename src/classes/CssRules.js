@@ -1,19 +1,103 @@
+"use strict";
+
+let idCount = 0;
+
 /**
- * @module CssRules
+ * @typedef {Object.<string, Object.<string, string>>} CssRulesObject
  */
 
-"use strict";
-import { Mixin } from "mixwith";
+/** 
+ * @typedef {Object} CssRuleProperties
+ * @property {HTMLElement} el
+ * @property {string} id
+ * @property {string} media
+ * @property {CSSStyleSheet} obj
+ * @property {CSSRuleList} rules
+ * @property {Array.<string>} styles
+ */
+
+/**
+ * @typedef {WeakMap.<CssRules, CssRuleProperties>} Protected
+ */
+
+ /**
+  * Protected Properties for CssRules
+  * @type {Protected}
+  */
+const PROTECTED = new WeakMap();
+
+/**
+ * Fetch the CssRule private property
+ * 
+ * @param {CssRules} instance The CssRules instance to fetch private properties from
+ * @param {string} property The property to return
+ * @returns {CssRuleProperties.<*>} Returns the property value
+ */
+const fetchProperty = function(instance, property) {
+    const prop = PROTECTED.get(instance);
+
+    return (prop) ? prop[property] : undefined;
+}
+
+/**
+ * Initialises a <style></style> element in the document head and syncs the CSSStylesheet object to CssInject
+ * 
+ * @this {CssRules}
+ * @param  {string} id A unique ID for the style element, else it defaults to 'css-inject-{idCount}', which increments with each new instance 
+ * @param  {string} media Defaults to "screen", but can be used to modify what sort of stylesheet the instance represents, like a dynamic print stylesheet
+ * @return {CssRules} returns itself, chaining method
+ */
+const init = function(id, media) {
+    if (!PROTECTED.has(this)) {
+        const el = document.createElement("style");
+        el.type = "text/css";
+        el.id = id;
+        el.media = media;
+        const head = document.head || document.getElementsByTagName('head')[0];
+        head.appendChild(el);
+
+        const obj = document.styleSheets[document.styleSheets.length - 1];
+        const rules = obj.cssRules;
+        const styles = [];
+
+        PROTECTED.set(this, {
+            el,
+            id,
+            media,
+            obj,
+            rules,
+            styles
+        });
+    }
+    return this;
+};
+
+/**
+ * Removes its <style> element from the document head and destroys itself
+ * 
+ * @this {CssRules}
+ * @return {void}
+ */
+const destroy = function() {
+    if (PROTECTED.has(this)) {
+        const el = fetchProperty(this, "el");
+
+        const head = el.parentNode;
+        head.removeChild(el);
+
+        PROTECTED.delete(this);
+    }
+}
 
 /**
  * Adds a new style rule or modifies an existing rule with new properties and/or values
  * 
- * @this {CssBase}
+ * @this {CssRules}
  * @param  {string} selector The CSS selector for the style rule
  * @param  {string} property The CSS property for the style rule
  * @param  {string} value The value of the CSS property
  * @chainable
- * @returns {CssBase} Chaining method, returns itself
+ * @returns {CssRules} Chaining method, returns itself
  */
 const add = function (selector, property, value) {
     const index = this.styles.indexOf(selector);
@@ -32,10 +116,10 @@ const add = function (selector, property, value) {
 /**
  * Adds new style rules or modifies existing rules via a provided object detailing all the styles to be added/modified
  * 
- * @this {CssBase}
- * @param  {Object.<string, Object.<string, string>>} object An object detailing all the styles to be provided, keys being selectors and sub-keys properties
+ * @this {CssRules}
+ * @param  {CssRulesObject} object An object detailing all the styles to be provided, keys being selectors and sub-keys properties
  * @chainable
- * @returns {CssBase} Chaining method, returns itself
+ * @returns {CssRules} Chaining method, returns itself
  */
 const objectAdd = function(object) {
     if (typeof object === "object") {
@@ -65,11 +149,11 @@ const objectAdd = function(object) {
 /**
  * Removes a style rule or a property if the latter is provided
  * 
- * @this {CssBase}
+ * @this {CssRules}
  * @param  {string} selector The CSS selector for the rule
  * @param  {string} [property] The CSS property to be removed
  * @chainable
- * @returns {CssBase} Chaining method, returns itself
+ * @returns {CssRules} Chaining method, returns itself
  */
 const remove = function (selector, property) {
     const index = this.styles.indexOf(selector);
@@ -88,10 +172,10 @@ const remove = function (selector, property) {
 /**
  * Removes new style rules or properties via a provided object detailing all the styles to be deleted
  * 
- * @this {CssBase}
- * @param  {Object.<string, Object.<string, any>>} object An object detailing all the styles to be removed, keys being selectors and sub-keys being properties
+ * @this {CssRules}
+ * @param  {CssRulesObject} object An object detailing all the styles to be removed, keys being selectors and sub-keys being properties
  * @chainable
- * @returns {CssBase} Chaining method, returns itself
+ * @returns {CssRules} Chaining method, returns itself
  */
 const objectRemove = function(object) {
     if (typeof object === "object") {
@@ -117,10 +201,10 @@ const objectRemove = function(object) {
 /**
  * Removes new style rules or properties via a provided object detailing all the styles to be deleted
  * 
- * @this {CssBase}
+ * @this {CssRules}
  * @param  {Array.<string>} array An Array of CSS Selectors to remove from the stylesheet
  * @chainable
- * @returns {CssBase} Chaining method, returns itself
+ * @returns {CssRules} Chaining method, returns itself
  */
 const arrayRemove = function(array) {
     for (let i = 0, len = array.length; i < len; i++) {
@@ -129,29 +213,66 @@ const arrayRemove = function(array) {
     return this;
 }
 
-/**
- * Create a CssRules mixin class.
- *
- * @exports cssrules
- * @param {*} superclass - The class to mix onto.
- * @return {module:cssrules~mixin} The mixin class.
- */
-const CssRulesMixin = Mixin(superclass => {
+/** The CssRules Class, representing a style instance to be modified and controlled by CssInject */
+export default class CssRules {
 
     /**
-     * A Mixin for Stylesheet manipulation
-     * @mixin
-     * @alias module:cssrules~mixin
+     * Initialises the state of CssRules and what kind of stylesheet it is.
+     * 
+     * @param  {string} [id] A unique ID for the style element, else it defaults to 'css-inject-{idCount}', which increments with each new instance 
+     * @param  {string} [media] Defaults to "screen", but can be used to modify what sort of stylesheet the instance represents, like a dynamic print stylesheet
      */
-    class CssRules extends superclass {}
+    constructor(id = `css-inject-${idCount++}`, media = "screen") {
+        this.init(id, media);
+    }
 
-    CssRules.prototype.add = add;
-    CssRules.prototype.remove = remove;
-    CssRules.prototype.objectAdd = objectAdd;
-    CssRules.prototype.objectRemove = objectRemove;
-    CssRules.prototype.arrayRemove = arrayRemove;
+    /**
+     * @returns {string} id
+     */
+    get id() {
+        return fetchProperty(this, "id");
+    }
 
-    return CssRules;
-});
+    /**
+     * @returns {string} media
+     */
+    get media() {
+        return fetchProperty(this, "media");
+    }
 
-export default CssRulesMixin
+    /**
+     * @returns {HTMLElement} el
+     */
+    get el() {
+        return fetchProperty(this, "el");
+    }
+
+    /**
+     * @returns {Array.<string>} styles
+     */
+    get styles() {
+        return fetchProperty(this, "styles");
+    }
+
+    /**
+     * @returns {CSSStyleSheet} obj
+     */
+    get obj() {
+        return fetchProperty(this, "obj");
+    }
+
+    /**
+     * @returns {CSSRuleList} rules
+     */
+    get rules() {
+        return fetchProperty(this, "rules");
+    }
+}
+
+CssRules.prototype.init = init;
+CssRules.prototype.destroy = destroy;
+CssRules.prototype.add = add;
+CssRules.prototype.remove = remove;
+CssRules.prototype.objectAdd = objectAdd;
+CssRules.prototype.objectRemove = objectRemove;
+CssRules.prototype.arrayRemove = arrayRemove;
