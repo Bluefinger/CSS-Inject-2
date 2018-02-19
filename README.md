@@ -166,6 +166,10 @@ Due to there not needing a selector to be attached to the object as the styles a
 ```
 The same object structure can be used too for removal, except all values are ignored as the keys from the Object are converted to an array and then passed to the array removal method.
 
+### Constructors
+#### new CssRules(id?, media?)
+Instantiate a CssRules object with optional parameters `id` and `media`. `id` defaults to `css-inject-${id}` whereas `media` defaults to `screen`.
+
 ### Properties
 All the properties below cannot be mutated directly once CssRules has been initialised. `id` and `media` can only be set during via the CssRules constructor.
 #### CssRules.styles
