@@ -1,7 +1,6 @@
 "use strict";
 
 const gulp = require("gulp");
-// const $if = require("gulp-if");
 const browserify = require("browserify");
 const babelify = require("babelify");
 const watchify = require("watchify");
