@@ -12,8 +12,9 @@ However, performant styling requires managing just how often styles are applied 
 
 ## Quick Example
 ```javascript
-cssInject.add("#content", "height", "200px"); // Add a CSS rule for a selector, property and value
-cssInject.add("#content > p", "font-weight", "bold"); // Standard CSS selectors all will work.
+var styles = new cssInject.CssRules();
+styles.add("#content", "height", "200px"); // Add a CSS rule for a selector, property and value
+styles.add("#content > p", "font-weight", "bold"); // Standard CSS selectors all will work.
 
 ```
 
@@ -21,33 +22,37 @@ cssInject.add("#content > p", "font-weight", "bold"); // Standard CSS selectors 
 ```javascript
 // Adding two styles to the same selectors maps the properties to a single selector in the queue.
 // This then gets injected out as a single #content {} style rule containing both properties.
-cssInject.add("#content", "height", "200px").add("#content", "width", "300px"); 
+var styles = new cssInject.CssRules();
+styles.add("#content", "height", "200px").add("#content", "width", "300px"); 
 ```
 
 ### Overwrite Styles Example
 ```javascript
-cssInject.add("#content", "height", "200px"); // Add a CSS rule and apply it
+var styles = new cssInject.CssRules();
+styles.add("#content", "height", "200px"); // Add a CSS rule and apply it
 
 // Updates the same declared rule as above, but with a new value for the height and
 // applies it to the generated stylesheet.
-cssInject.add("#content", "height", "300px");
+styles.add("#content", "height", "300px");
 ```
 
 ### Remove Styles Example
 ```javascript
+var styles = new cssInject.CssRules();
 // Add example styles
-cssInject.add("#content > p", "font-weight", "bold");
-cssInject.add("#content", "width", "300px");
-cssInject.add("#content", "height", "200px");
+styles.add("#content > p", "font-weight", "bold");
+styles.add("#content", "width", "300px");
+styles.add("#content", "height", "200px");
 
 // Individual properties or entire selector rules can be removed out of the queue
 // Upon applying the changes, the specified rules and properties are expunged from
 // the generated stylesheet.
-cssInject.remove("#content > p", "font-weight").remove("#content");
+styles.remove("#content > p", "font-weight").remove("#content");
 ```
 
 ### Object import
 ```javascript
+var styles = new cssInject.CssRules();
 // You can declare an object containing corresponding selectors and assigned properties. 
 // These automatically get tracked according to existing queued selectors if there are any matches. 
 // In a valid object to pass to cssInject, the top level key corresponds to the selector,
@@ -62,14 +67,15 @@ var rules = {
 rules[selector] = {
     "background-color":"#ccc"
 };
-cssInject.objectAdd(rules); // Inject the resulting CSS to the page
+styles.objectAdd(rules); // Inject the resulting CSS to the page
 ```
 ### Inline Styles
 ```javascript
+var inline = cssInject.CssInline;
 var element = document.getElementById("content"),
     elements = document.getElementsByClassName("stuff");
-cssInject.addInline(element, "width", "300px"); // Only sets to a single element
-cssInject.addObjectInline(elements, {"height":"200px"}); Adds to lots of elements
+inline.addInline(element, "width", "300px"); // Only sets to a single element
+inline.addObjectInline(elements, {"height":"200px"}); Adds to lots of elements
 ```
 
 ## Usage
