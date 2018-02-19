@@ -40,39 +40,6 @@ const fetchProperty = function(instance, property) {
 }
 
 /**
- * Initialises a <style></style> element in the document head and syncs the CSSStylesheet object to CssInject
- * 
- * @this {CssRules}
- * @param  {string} id A unique ID for the style element, else it defaults to 'css-inject-{idCount}', which increments with each new instance 
- * @param  {string} media Defaults to "screen", but can be used to modify what sort of stylesheet the instance represents, like a dynamic print stylesheet
- * @return {CssRules} returns itself, chaining method
- */
-const init = function(id, media) {
-    if (!PROTECTED.has(this)) {
-        const el = document.createElement("style");
-        el.type = "text/css";
-        el.id = id;
-        el.media = media;
-        const head = document.head || document.getElementsByTagName('head')[0];
-        head.appendChild(el);
-
-        const obj = document.styleSheets[document.styleSheets.length - 1];
-        const rules = obj.cssRules;
-        const styles = [];
-
-        PROTECTED.set(this, {
-            el,
-            id,
-            media,
-            obj,
-            rules,
-            styles
-        });
-    }
-    return this;
-};
-
-/**
  * Removes its <style> element from the document head and destroys itself
  * 
  * @this {CssRules}
@@ -100,15 +67,16 @@ const destroy = function() {
  * @returns {CssRules} Chaining method, returns itself
  */
 const add = function (selector, property, value) {
-    const index = this.styles.indexOf(selector);
+    const props = PROTECTED.get(this);
+    const index = props.styles.indexOf(selector);
 
     if (index > -1) {
-        this.rules[index].style.setProperty(property,value);
+        props.rules[index].style.setProperty(property,value);
     } else {
-        const i = this.styles.length;
-        this.styles.push(selector);
+        const i = props.styles.length;
+        props.styles.push(selector);
         const str = (!value) ? property : property + ":" + value + ";";
-        this.obj.insertRule(`${selector}{${str}}`, i);
+        props.obj.insertRule(`${selector}{${str}}`, i);
     }
     return this;
 };
@@ -123,10 +91,11 @@ const add = function (selector, property, value) {
  */
 const objectAdd = function(object) {
     if (typeof object === "object") {
+        const styles = fetchProperty(this, "styles");
         for (let selector in object) {
             if (object.hasOwnProperty(selector)) {
                 let str = "";
-                const index = this.styles.indexOf(selector);
+                const index = styles.indexOf(selector);
                 for (let property in object[selector]) {
                     if (object[selector].hasOwnProperty(property)) {
                         let value = object[selector][property];
@@ -156,14 +125,15 @@ const objectAdd = function(object) {
  * @returns {CssRules} Chaining method, returns itself
  */
 const remove = function (selector, property) {
-    const index = this.styles.indexOf(selector);
+    const { styles, rules, obj } = PROTECTED.get(this);
+    const index = styles.indexOf(selector);
 
     if (index > -1) {
         if (property) {
-            this.rules[index].style.removeProperty(property)
+            rules[index].style.removeProperty(property)
         } else {
-            this.styles.splice(index, 1);
-            this.obj.deleteRule(index)
+            styles.splice(index, 1);
+            obj.deleteRule(index);
         }
     }
     return this;
@@ -223,7 +193,27 @@ export default class CssRules {
      * @param  {string} [media] Defaults to "screen", but can be used to modify what sort of stylesheet the instance represents, like a dynamic print stylesheet
      */
     constructor(id = `css-inject-${idCount++}`, media = "screen") {
-        this.init(id, media);
+        if (!PROTECTED.has(this)) {
+            const el = document.createElement("style");
+            el.type = "text/css";
+            el.id = id;
+            el.media = media;
+            const head = document.head || document.getElementsByTagName('head')[0];
+            head.appendChild(el);
+    
+            const obj = document.styleSheets[document.styleSheets.length - 1];
+            const rules = obj.cssRules;
+            const styles = [];
+    
+            PROTECTED.set(this, {
+                el,
+                id,
+                media,
+                obj,
+                rules,
+                styles
+            });
+        }
     }
 
     /**
@@ -241,24 +231,11 @@ export default class CssRules {
     }
 
     /**
-     * @returns {HTMLElement} el
-     */
-    get el() {
-        return fetchProperty(this, "el");
-    }
-
-    /**
      * @returns {Array.<string>} styles
      */
     get styles() {
-        return fetchProperty(this, "styles");
-    }
-
-    /**
-     * @returns {CSSStyleSheet} obj
-     */
-    get obj() {
-        return fetchProperty(this, "obj");
+        const styles = fetchProperty(this, "styles");
+        return (styles) ? styles.slice() : styles;
     }
 
     /**
@@ -269,7 +246,6 @@ export default class CssRules {
     }
 }
 
-CssRules.prototype.init = init;
 CssRules.prototype.destroy = destroy;
 CssRules.prototype.add = add;
 CssRules.prototype.remove = remove;

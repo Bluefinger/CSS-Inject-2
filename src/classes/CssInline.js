@@ -1,6 +1,3 @@
-/**
- * @module CssInline
- */
 "use strict";
 
 /**

@@ -33,10 +33,6 @@ describe("CssInject", function() {
             assert.notEqual(test.styles.length, undefined);
         });
 
-        it("should contain an instance of the initialised stylesheet", function() {
-            assert.ok(test.obj instanceof CSSStyleSheet);
-        });
-
         it("should contain an instance of the Css Rules object", function() {
             assert.ok(test.rules instanceof CSSRuleList);
         });
